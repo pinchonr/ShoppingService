@@ -1,1 +1,1 @@
-web:    java -jar target/helloworld.jar
+web: java -cp target/classes:target/dependency/* com.example.heroku.Main
