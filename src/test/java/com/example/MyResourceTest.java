@@ -21,9 +21,9 @@ public class MyResourceTest extends JerseyTest {
      * Test to see that the message "Got it!" is sent in the response.
      */
     @Test
-    public void testGetIt() {
-        final String responseMsg = target().path("wsrest/appel").request().get(String.class);
+    public void testGetInfo() {
+        final String responseMsg = target().path("ShoppingService/books").request().get(String.class);
 
-        assertEquals("Hello, Heroku!", responseMsg);
+        assertEquals("Please post account, isbn, from, to and corr to /ShoppingService/books", responseMsg);
     }
 }

@@ -1,5 +1,7 @@
 package com.example;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,12 +27,13 @@ public class MyResource {
 	 * Method handling HTTP GET requests. The returned object will be sent
 	 * to the client as "text/plain" media type.
 	 *
-	 * @return String that will be returned as a text/plain response.
+	 * @return Response the HTTP response
 	 */
-	@Path("/books/")    
+	@Path("/books")    
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response bookReq(String account,String isbn,String from, String to, String corr) {
+	@Consumes(MediaType.TEXT_PLAIN)
+	public Response bookReq(@FormParam("account")String account,@FormParam("isbn")String isbn,@FormParam("from")String from,@FormParam("to")String to, @FormParam("corr")String corr) {
 		String regex="^(?:ISBN(?:-13)?:? )?(?=[0-9]{13}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)97[89][- ]?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9]$";
 		if(from.equals("Client")&& to.equals("Shop")&&corr.equals(account)){
 			this.account=account;
@@ -43,11 +46,11 @@ public class MyResource {
 		return Response.status(200).entity(result).build();
 	}
 
-	@Path("db")    
+	@Path("/books")    
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getItbd() {
-		return showDatabase();
+	public String getInfo() {
+		return "Please post account, isbn, from, to and corr to /ShoppingService/books";
 	}
 
 	private Connection getConnection() throws Exception {
