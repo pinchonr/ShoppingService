@@ -8,13 +8,13 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-import com.example.MyResource;
+import com.example.Shop;
 
 public class MyResourceTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(MyResource.class);
+        return new ResourceConfig(Shop.class);
     }
 
     /**
@@ -24,6 +24,6 @@ public class MyResourceTest extends JerseyTest {
     public void testGetInfo() {
         final String responseMsg = target().path("ShoppingService/books").request().get(String.class);
 
-        assertEquals("Please post account, isbn, from, to and corr to /ShoppingService/books", responseMsg);
+        assertEquals("To get the stock of a book, please post account, isbn, from, to and corr to /ShoppingService/books, to purchase a book please post isbn, quantity,from, to and corr to /WholesalerService.", responseMsg);
     }
 }
