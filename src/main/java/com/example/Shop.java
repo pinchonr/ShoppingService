@@ -51,6 +51,7 @@ public class Shop {
 		if(!isbn.matches(regex)){
 			return Response.status(400).entity("Invalid isbn!").build();
 		}
+		isbn.replaceAll("-", "");
 		String stock= getStock(isbn, from, to, corr);
 		String result = "Stock of the book with isbn "+isbn+" :"+stock;
 		return Response.status(200).entity(result).build();
@@ -65,48 +66,37 @@ public class Shop {
 
 	private String getStock(String isbn,String from,String to, String corr)
 	{
-		String result=null;
-		try {
+		String url = "https://blueberry-crisp-72094.herokuapp.com/StockService/stock/"+isbn;
+		BufferedReader in=null;
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+		
+		try{
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			// optional default is GET
+			con.setRequestMethod("GET");
 
-			URL url = new URL("https://blueberry-crisp-72094.herokuapp.com/StockService/stock");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-			String input = "account:account,isbn:9780596520687,from:Client,to:Shop,corr:account";
-
-			OutputStream os = conn.getOutputStream();
-			os.write(input.getBytes());
-			os.flush();
-
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_ACCEPTED) {
-				throw new RuntimeException("Failed : HTTP error code : "
-					+ conn.getResponseCode());
-			}
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(conn.getInputStream())));
-
-			String output;
+			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			
-			while ((output = br.readLine()) != null) {
-				result+=output;
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
 			}
-
-			conn.disconnect();
-
-		  } catch (MalformedURLException e) {
-
+			return response.toString();
+		}
+		catch(Exception e){
 			return e.getMessage();
+		}
+		finally{
+			if(in!=null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					//ignore error
+				}
+			}
+		}
 
-		  } catch (IOException e) {
-
-			return e.getMessage();
-
-		 }
-
-		return result;
 	}
 
 }
