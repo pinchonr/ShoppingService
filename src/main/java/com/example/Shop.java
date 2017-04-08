@@ -51,7 +51,7 @@ public class Shop {
 		if(!isbn.matches(regex)){
 			return Response.status(400).entity("Invalid isbn!").build();
 		}
-		isbn.replaceAll("-", "");
+		
 		String stock= getStock(isbn, from, to, corr);
 		String result = "Stock of the book with isbn "+isbn+" :"+stock;
 		return Response.status(200).entity(result).build();
