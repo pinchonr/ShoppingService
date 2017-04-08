@@ -42,8 +42,8 @@ public class Shop {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response bookReq(@FormParam("account")String account,@FormParam("isbn")String isbn,@FormParam("from")String from,@FormParam("to")String to, @FormParam("corr")String corr) {
-		
-		String regex="^(?:ISBN(?:-13)?:? )?(?=[0-9]{13}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)97[89][- ]?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9]$";
+		//Example of valid isbn13: 978-0-596-52068-7
+		String regex="^(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$";
 		if(from.equals("Client")&& to.equals("Shop")&&corr.equals(account)&&isbn!=null){
 			this.account=account;
 			this.corr=corr;
@@ -63,25 +63,12 @@ public class Shop {
 		return "To get the stock of a book, please post account, isbn, from, to and corr to /ShoppingService/books, to purchase a book please post isbn, quantity,from, to and corr to /WholesalerService.";
 	}
 
-	/**
-	private Connection getConnection() throws Exception {
-		// Class.forName("org.postgresql.Driver");
-		URI dbUri = new URI(System.getenv("DATABASE_URL"));
-
-		String username = dbUri.getUserInfo().split(":")[0];
-		String password = dbUri.getUserInfo().split(":")[1];
-		String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-
-		return DriverManager.getConnection(dbUrl, username, password);
-	}
-	*/
-
 	private String getStock(String isbn,String from,String to, String corr)
 	{
 		String result=null;
 		try {
 
-			URL url = new URL("http://localhost:7000/StockService/stock");
+			URL url = new URL("https://blueberry-crisp-72094.herokuapp.com/StockService/stock");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
