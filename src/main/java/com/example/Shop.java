@@ -69,9 +69,8 @@ public class Shop {
 	}
 
 	/**
-	Method making a GET request with HttpUrlConnexion to the stock service. The isbn is add to 		the url.
-
-	@return String the StockService response
+	*Method making a GET request with HttpUrlConnexion to the stock service. The isbn is add to the url.
+	*@return String the StockService response
 	*/
 	private String getStock(String isbn,String from,String to, String corr)
 	{
