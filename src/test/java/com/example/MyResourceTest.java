@@ -24,6 +24,6 @@ public class MyResourceTest extends JerseyTest {
     public void testGetInfo() {
         final String responseMsg = target().path("ShoppingService/books").request().get(String.class);
 
-        assertEquals("To get the stock of a book, please post account, isbn, from, to and corr to /ShoppingService/books, to purchase a book please post isbn, quantity,from, to and corr to /WholesalerService.", responseMsg);
+        assertEquals("To get the stock of a book, please post account, isbn, from and to at https://secret-crag-41539.herokuapp.com/ShoppingService/books/, to purchase a book please post isbn, quantity,from and to at https://secret-crag-41539.herokuapp.com/ShoppingService/books/", responseMsg);
     }
 }

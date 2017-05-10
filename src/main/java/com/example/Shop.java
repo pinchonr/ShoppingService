@@ -41,15 +41,18 @@ public class Shop {
 	@POST
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response bookReq(@FormParam("account")String account,@FormParam("isbn")String isbn,@FormParam("from")String from,@FormParam("to")String to, @FormParam("corr")String corr) {
+	public Response bookReq(@FormParam("account")String account,@FormParam("isbn")String isbn,@FormParam("from")String from,@FormParam("to")String to) {
+
+		//TODO Add the client token verif here
+
 		//Example of valid isbn13: 978-0-596-52068-7
-		String regex="^(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$";
-		if(from.equals("Client")&& to.equals("Shop")&&corr.equals(account)&&isbn!=null){
+		String regex="^(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)";
+
+		if(from.equals("Client")&& to.equals("Shop")&&isbn!=null){
 			this.account=account;
-			this.corr=corr;
 		}
 		if(!isbn.matches(regex)){
-			return Response.status(400).entity("Invalid isbn!").build();
+			return Response.status(400).entity("Invalid isbn 13!").build();
 		}
 		
 		String stock= getStock(isbn, from, to, corr);
@@ -57,13 +60,19 @@ public class Shop {
 		return Response.status(200).entity(result).build();
 	}
 
+	
 	@Path("/books")    
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getInfo() {
-		return "To get the stock of a book, please post account, isbn, from, to and corr to /ShoppingService/books, to purchase a book please post isbn, quantity,from, to and corr to /WholesalerService.";
+		return "To get the stock of a book, please post account, isbn, from and to at https://secret-crag-41539.herokuapp.com/ShoppingService/books/, to purchase a book please post isbn, quantity,from and to at https://secret-crag-41539.herokuapp.com/ShoppingService/books/";
 	}
 
+	/**
+	Method making a GET request with HttpUrlConnexion to the stock service. The isbn is add to 		the url.
+
+	@return String the StockService response
+	*/
 	private String getStock(String isbn,String from,String to, String corr)
 	{
 		String url = "https://blueberry-crisp-72094.herokuapp.com/StockService/stock/"+isbn;
@@ -74,6 +83,7 @@ public class Shop {
 		try{
 			URL obj = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			
 			// optional default is GET
 			con.setRequestMethod("GET");
 
